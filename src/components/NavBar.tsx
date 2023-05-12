@@ -20,9 +20,6 @@ const NavBar = (user: any) => {
         </div>
       </div>
 
-      {/* {!!user.isSignedIn && <> */}
-
-      {/* </>} */}
       <div className="flex flex-1 justify-end px-4 py-2">
         <SignedIn>
           <UserButton />
