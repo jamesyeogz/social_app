@@ -3,15 +3,13 @@ import React, { useState } from "react";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
-const CreatePostWizard = () => {
+const CreateCommentWizard = (props: { postId: string }) => {
   const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
   const ctx = api.useContext();
-  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+  const { mutate, isLoading: isPosting } = api.comment.create.useMutation({
     onSuccess: () => {
       setContent("");
-      setTitle("");
-      void ctx.posts.getAll.invalidate();
+      void ctx.comment.getCommentsByPostId.invalidate();
     },
     onError: (e) => {
       const errorMessage = e?.data?.zodError?.fieldErrors.content;
@@ -31,19 +29,6 @@ const CreatePostWizard = () => {
       />
       <div className="w-full grow rounded border border-white p-3">
         <input
-          placeholder="Type Title"
-          className="mb-1 h-12 w-full bg-transparent text-xl outline-none"
-          value={title}
-          onChange={(e) => {
-            if (e.target.value.length > 128) {
-              return;
-            } else {
-              setTitle(e.target.value);
-            }
-          }}
-          disabled={isPosting}
-        />
-        <input
           placeholder="Type some Words"
           className="h-12 w-full bg-transparent text-left outline-none "
           value={content}
@@ -57,14 +42,14 @@ const CreatePostWizard = () => {
       {!isPosting && (
         <button
           onClick={() => {
-            mutate({ title: title, content: content });
+            mutate({content: content,postId:props.postId });
           }}
         >
-          Post
+          Comment
         </button>
       )}
     </div>
   );
 };
 
-export default CreatePostWizard;
+export default CreateCommentWizard;

@@ -3,7 +3,7 @@ import { User } from "@clerk/nextjs/dist/server";
 import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import type { Post } from "@prisma/client";
+import { Post, Prisma, PrismaClient } from "@prisma/client";
 
 import {
   createTRPCRouter,
@@ -17,7 +17,7 @@ const filterUserForClient = (user: User) => {
     profileImageUrl: user.profileImageUrl,
   };
 };
-const addUserDataToPosts = async (posts: Post[]) => {
+const addUserDataToPosts = async (ctx: any, posts: Post[]) => {
   const users = (
     await clerkClient.users.getUserList({
       userId: posts.map((post) => post.authorId),
@@ -51,9 +51,40 @@ export const postsRouter = createTRPCRouter({
         },
       ],
     });
-    return addUserDataToPosts(posts);
+    return addUserDataToPosts(ctx, posts);
   }),
-
+  getLikesByPostId: publicProcedure
+  .input(
+    z.object({
+      id: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const likes = await ctx.prisma.like.findMany({
+      where: {
+        postId: input.id,
+      },
+    });
+    return likes
+  }),
+  getPostByPostId: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!post)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      return (await addUserDataToPosts(ctx, [post]))[0];
+    }),
   getPostsByUserId: publicProcedure
     .input(
       z.object({
@@ -68,9 +99,32 @@ export const postsRouter = createTRPCRouter({
         take: 100,
         orderBy: [{ createdAt: "desc" }],
       });
-      return addUserDataToPosts(posts);
+      return addUserDataToPosts(ctx, posts);
     }),
-
+  Dislike: privateProcedure
+    .mutation(({ ctx }) => {
+      const authorId = ctx.userId;
+      return ctx.prisma.like.deleteMany({
+        where: { id: authorId },
+      });
+    }),
+  Like: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const authorId = ctx.userId;
+      console.log(authorId)
+      return ctx.prisma.like.create({
+        data: {
+          authorId:authorId,
+          postId: input.id,
+          
+        },
+      });
+    }),
   create: privateProcedure
     .input(
       z.object({

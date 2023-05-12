@@ -15,7 +15,23 @@ model Post {
     id String @id @default(cuid())
     createdAt DateTime @default(now())
     content String @db.VarChar(255)
-    title String @db.VarChar(32)
+    title String @db.VarChar(128)
     authorId String
     @@index([authorId])
+}
+
+model Like {
+  id String @id @default(cuid())
+  authorId String @unique
+  postId String
+  @@index([postId])
+}
+
+model Comment {
+  id String @id @default(cuid())
+  postId String
+  authorId String
+  content String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  @@index([postId])
 }

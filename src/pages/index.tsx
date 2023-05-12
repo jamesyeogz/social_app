@@ -15,7 +15,6 @@ const Home: NextPage = () => {
   const { user, isLoaded: userLoaded } = useUser();
   if (isLoading) return <LoadingSpinner />;
   if (!data) return <div>Something Went Wrong</div>;
-  const number = 2;
 
   return (
     <>
@@ -27,7 +26,6 @@ const Home: NextPage = () => {
       <PageLayout>
         <NavBar user={user} />
         <CreatePostWizard />
-
         {data?.map((fullPost) => (
           <PostView {...fullPost} key={fullPost.post.id} />
         ))}
