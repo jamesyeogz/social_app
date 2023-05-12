@@ -23,7 +23,7 @@ export const postsRouter = createTRPCRouter({
     const posts = await ctx.prisma.post.findMany({
       take: 100,
     });
-    const users = await (
+    const users = (
       await clerkClient.users.getUserList({
         userId: posts.map((post) => post.authorId),
         limit: 100,
@@ -52,7 +52,7 @@ export const postsRouter = createTRPCRouter({
         title: z.string().min(1).max(32),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       const authorId = ctx.userId;
       const post = ctx.prisma.post.create({
         data: {
