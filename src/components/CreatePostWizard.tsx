@@ -1,7 +1,8 @@
 import { useUser } from "@clerk/nextjs";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
-
+import { toast } from "react-hot-toast";
+import LoadingSpinner from "./LoadingSpinner";
 const CreatePostWizard = () => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
@@ -11,6 +12,12 @@ const CreatePostWizard = () => {
       setContent("");
       setTitle("");
       void ctx.posts.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e?.data?.zodError?.fieldErrors.content;
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0]!);
+      }
     },
   });
   const { user } = useUser();
@@ -28,7 +35,11 @@ const CreatePostWizard = () => {
           className="mb-1 h-12 w-full bg-transparent text-xl outline-none"
           value={title}
           onChange={(e) => {
-            setTitle(e.target.value);
+            if (e.target.value.length > 30) {
+              return;
+            } else {
+              setTitle(e.target.value);
+            }
           }}
           disabled={isPosting}
         />
@@ -42,13 +53,16 @@ const CreatePostWizard = () => {
           disabled={isPosting}
         />
       </div>
-      <button
-        onClick={() => {
-          mutate({ title: title, content: content });
-        }}
-      >
-        Post
-      </button>
+      {isPosting && <div><LoadingSpinner /></div>}
+      {!isPosting && (
+        <button
+          onClick={() => {
+            mutate({ title: title, content: content });
+          }}
+        >
+          Post
+        </button>
+      )}
     </div>
   );
 };
