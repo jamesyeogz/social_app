@@ -10,7 +10,7 @@ const CreatePostWizard = () => {
     onSuccess: () => {
       setContent("");
       setTitle("");
-      ctx.posts.getAll.invalidate();
+      void ctx.posts.getAll.invalidate();
     },
   });
   const { user } = useUser();
