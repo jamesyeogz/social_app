@@ -1,5 +1,4 @@
 import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 
@@ -11,7 +10,7 @@ const CreatePostWizard = () => {
   if (!user) return null;
   return (
     <div className="flex w-full items-center gap-3 p-10">
-      <Image
+      <img
         src={user.profileImageUrl}
         alt="Profile Name"
         className="h-14 w-14 rounded-full"
