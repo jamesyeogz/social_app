@@ -22,6 +22,9 @@ export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
       take: 100,
+      orderBy: [{
+        createdAt: "desc"
+      }]
     });
     const users = (
       await clerkClient.users.getUserList({
@@ -61,5 +64,6 @@ export const postsRouter = createTRPCRouter({
           title: input.title,
         },
       });
+      return post;
     }),
 });
