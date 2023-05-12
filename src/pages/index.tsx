@@ -1,12 +1,20 @@
+import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import CreatePostWizard from "~/components/CreatePostWizard";
+import LoadingSpinner from "~/components/LoadingSpinner";
 import NavBar from "~/components/NavBar";
+import PostView from "~/components/PostView";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const { data } = api.posts.getAll.useQuery();
+  const { data, isLoading } = api.posts.getAll.useQuery();
+  const { user, isLoaded: userLoaded } = useUser();
+  if (isLoading) return <LoadingSpinner />;
+  if (!data) return <div>Something Went Wrong</div>;
+  const number = 2;
 
   return (
     <>
@@ -17,24 +25,11 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex h-screen justify-center">
         <div className="w-full flex-row justify-center border-x md:max-w-7xl">
-          <NavBar />
+          <NavBar user={user} />
+          <CreatePostWizard />
 
-          {data?.map((post) => (
-            <div
-              key={post.id}
-              className=" p-10 w-full justify-center"
-            >
-              <div className="border border-white p-3">
-              <p className="text-xl font-semibold text-white">
-                @{post.authorId}
-              </p>
-              <h1 className="text-3xl font-bold text-white">
-                {post.title}
-              </h1>
-              <p className="text-xl text-white">{post.content}</p>
-
-              </div>
-            </div>
+          {data?.map((fullPost) => (
+            <PostView {...fullPost} key={fullPost.post.id} />
           ))}
         </div>
       </main>
