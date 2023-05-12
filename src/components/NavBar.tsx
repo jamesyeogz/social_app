@@ -22,11 +22,6 @@ const NavBar = (user: any) => {
       </div>
 
       {/* {!!user.isSignedIn && <> */}
-      <div className="flex flex-1 justify-center">
-        <div className="text-white-200 border-white-200 w-48 rounded border bg-transparent px-4 py-2 font-semibold hover:border-transparent hover:bg-white hover:text-black">
-          Make a New Post
-        </div>
-      </div>
 
       {/* </>} */}
       <div className="flex flex-1 justify-end px-4 py-2">
