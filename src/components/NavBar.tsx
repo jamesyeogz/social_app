@@ -8,16 +8,20 @@ import {
   SignedOut,
   SignIn,
 } from "@clerk/nextjs";
+import Link from "next/link";
 
 const NavBar = (user: any) => {
   return (
     <div className="flex w-full flex-row items-center justify-between p-3">
       <div className="flex flex-1 flex-row items-center">
-        <div className="bh-transparent rounded-lg border p-3 text-2xl font-bold hover:blur-sm">
-          Insania.io
-        </div>
-        <div className="pl-3">
-        </div>
+        <Link href="/">
+          {" "}
+          <div className="bh-transparent rounded-lg border p-3 text-2xl font-bold hover:blur-sm">
+            Insania.io
+          </div>
+        </Link>
+
+        <div className="pl-3"></div>
       </div>
 
       <div className="flex flex-1 justify-end px-4 py-2">
