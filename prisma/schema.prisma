@@ -22,7 +22,7 @@ model Post {
 
 model Like {
   id String @id @default(cuid())
-  authorId String @unique
+  authorId String 
   postId String
   @@index([postId])
 }
