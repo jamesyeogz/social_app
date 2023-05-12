@@ -17,7 +17,6 @@ const NavBar = (user: any) => {
           Insania.io
         </div>
         <div className="pl-3">
-          {user.isSignedIn && <div>Welcome James</div>}
         </div>
       </div>
 
