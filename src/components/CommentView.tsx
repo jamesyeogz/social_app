@@ -16,12 +16,15 @@ const CommentView = (props:CommentWithPostId) => {
       <Link href={`/${author.id}`}>
         <div className='flex flex-row items-center gap-3'>
         <img src={author?.profileImageUrl} alt='image' className='h-12 w-12 rounded-full'/>
-        <span className="text-xl font-semibold text-white">
+        <div className='flex flex-wrap'>
+        <div className="text-xl font-semibold text-white">
         @{author.username? author.username:author.id}
-      </span>
-      <span className="text-xl font-thin text-white">
+      </div>
+      <div className="text-xl font-thin text-white">
         . Posted {dayjs(comment.createdAt).fromNow()}
-      </span>
+      </div>
+        </div>
+
         </div>
         </Link>
       <p className="mb-2 text-xl text-white">{comment.content}</p>
