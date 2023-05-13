@@ -28,10 +28,10 @@ const PostView = (props: PostWithUser) => {
               className="h-12 w-12 rounded-full"
             />
             <div className="flex flex-wrap">
-            <div className="text-xl font-semibold text-white md:text-l">
+            <div className=" md:text-xl font-semibold text-white text-sm ">
               @{author.username ? author.username : author.id}
             </div>
-            <div className="text-xl font-thin text-white md:text-l">
+            <div className=" md:text-xl font-thin text-white text-l ">
               . Posted {dayjs(post.createdAt).fromNow()}
             </div>
             </div>
@@ -39,8 +39,8 @@ const PostView = (props: PostWithUser) => {
           </div>
         </Link>
         <Link href={`/post/${post.id}`}>
-          <h1 className="my-3 text-3xl font-bold text-white md:my-1">{post.title}</h1>
-          <p className="mb-2 text-xl text-white md:mb-1">{post.content}</p>
+          <div className="my-3  md:text-3xl  text-l font-bold text-white text-xl ">{post.title}</div>
+          <p className="mb-2 md:text-2xl  text-l text-white text-l ">{post.content}</p>
           {/* <span className="px-3">{number} Comments</span> */}
           <span>{data.length} Likes </span>
         </Link>
